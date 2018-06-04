@@ -1,0 +1,1 @@
+This project automates facebook to get how many notifications i have, needs the phone number and password of the user

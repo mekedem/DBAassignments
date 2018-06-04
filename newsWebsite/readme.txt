@@ -1,0 +1,1 @@
+In this project the web scrapper gets news from the site www.supersport.com and posts the news to my own website running on localhost

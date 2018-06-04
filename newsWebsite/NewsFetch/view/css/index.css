@@ -1,0 +1,39 @@
+section {
+    width: 400px;
+    border: 1px solid saddlebrown;
+    padding: 10px;
+    margin: 200px auto;
+    border-radius: 10px;
+    background-color: white;
+}
+
+section>div {
+    padding: 10px 0;
+}
+
+button{
+    background-color:  #00477e;
+    box-shadow: 0 2px 2px black;
+    padding-left: 20px;
+    padding-right: 20px;
+    margin-left: 20px;
+}
+
+input{
+    box-shadow: 0 2px 2px black;
+    padding-right: 120px;
+}
+
+#go{
+    color: #fff;
+}
+#logo{
+    margin-left: 105px;
+    color: #3a73a9;
+}
+#search{
+    margin-left: 20px;
+}
+#ba{
+    color: #ff6666;
+}
