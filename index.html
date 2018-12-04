@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>DBA Assignment</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <style>
+    h3{
+        margin-left: 10%;
+    }
+
+    h5{
+        width: 60%;
+    }
+   
+
+    </style>
+  </head>
+  <body>
+    
+<h3>MEKEDEM GETANEH</h3>
+<h3> ATR/6916/08</h3>
+<h3>Section One</h3>
+
+<h4> DATABASE OBJECT </h4>
+<h5>
+        A database object in a relational database is a data structure
+        used to either store or reference data.
+        When a database object is created, a new object type cannot be created
+        because all the various object types created are restricted by the very nature,
+        or source code, of the relational database model being used, such as Oracle,
+        SQL Server or Access. What is being created is instances of the objects, 
+        such as a new table, an index on that table or a view on the same table. </h5>
+
+<br/>
+
+<h4>1. TABLE</h4>
+<h5>A table is a collection of related data held in a structured format within a database.
+        It consists of columns, and rows.
+        
+        Object tables: store only objects In an object table, each row represents an object,
+                   which is referred to as a row object.
+        Relational tables: store objects with other table data Objects that are stored as
+                     columns of a relational table, or are attributes of other objects,
+                    are called column objects </h5>
+<pre>   CREATE TABLE person_obj_table OF person_typ;
+
+        INSERT INTO person_obj_table VALUES (
+               person_typ(101, 'John', 'Smith') );
+</pre>
+  
+<h5> can create a table called person_obj_table that is of type person_typ object on OBJECTS
+  example so the table will have the id, firstname, lastname attributes.
+</h5>
+
+<br/>
+
+<h4>2. OBJECT</h4>
+<h5>An object type is a kind of data type. You can use it in the same ways that
+        you use standard data types such as NUMBER or VARCHAR2. For example, you can
+        specify an object type as the data type of a column in a relational table,
+        and you can declare variables of an object type. The value is a variable or
+        an instance of that type. An object instance is also called an object. you can
+        also specify methods in it.</h5>
+<pre>   CREATE TYPE person_typ AS OBJECT (
+        idno           NUMBER,
+        first_name     VARCHAR2(20),
+        last_name      VARCHAR2(20),
+        MAP MEMBER FUNCTION get_idno RETURN NUMBER
+      )
+      /
+      CREATE TYPE BODY person_typ AS
+        MAP MEMBER FUNCTION get_idno RETURN NUMBER IS
+        BEGIN
+          RETURN idno;
+        END;
+      END;
+      /
+</pre>
+  
+<h5> the above code creates object type instance called person_typ which has 
+        id_number which takes type Number,
+        first name which takes type Varchar up to 20 characters
+        last_name which takes type Varchar up to 20 characters
+        and at last there is a method called get_idno which returns id number with a type NUMBER
+        so the method body is written below.
+</h5>
+
+<br/>
+
+<h4>3. METHODS</h4>
+<h5>Methods are procedures or functions that applications can use to perform operations on
+        the attributes of the object type. Methods are optional. They define the behavior of 
+        objects of that type.Object methods are functions or procedures that you can declare
+        in an object type definition to implement behavior that you want objects of that type
+        to perform.
+        
+        The general kinds of methods that can be declared in a type definition are:
+        
+        Member Methods
+        Using member methods, you can provide access to the data of an object, and otherwise 
+        define operations that an application performs on the data. To perform an operation, 
+        the application calls the appropriate method on the appropriate object.
+        
+        Static Methods
+        Static methods compare object instances and perform operations that do not use the data
+        of any particular object, but, instead, are global to an object type.
+        
+        Constructor Methods
+        A default constructor method is implicitly defined for every object type, unless it is 
+        overwritten with a user-defined constructor. A constructor method is called on a type 
+        to construct or create an object instance of the type.
+        
+        example</h5>
+
+<pre>  /
+
+CREATE TYPE BODY person_typ AS
+  MAP MEMBER FUNCTION get_idno RETURN NUMBER IS
+  BEGIN
+    RETURN idno;
+  END;
+END;
+
+/
+
+</pre>
+  
+<h5>  in the above OBJECT example
+        "MAP MEMBER FUNCTION get_idno RETURN NUMBER" first declares the function and the body
+        is written above as follows
+</h5>
+
+
+<br/>
+
+<h4>4. TRIGGER</h4>
+<h5>Oracle allows defining procedures that are implicitly executed when an
+        INSERT, UPDATE, or DELETE statement is issued against the associated table. 
+        These procedures are called database triggers.
+        
+        Triggers are similar to stored procedures, discussed in Chapter 14, "Procedures 
+        and Packages". A trigger can include SQL and PL/SQL statements to execute as a unit
+         and can invoke stored procedures. However, procedures and triggers differ in the way 
+        that they are invoked. While a procedure is explicitly executed by a user, application, 
+        or trigger, one or more triggers are implicitly fired (executed) by Oracle when 
+        a triggering INSERT, UPDATE, or DELETE statement is issued, no matter which user is
+        connected or which application is being used. </h5>
+
+<pre>  "AFTER UPDATE OF parts_on_hand ON inventory" this is a triggering statement
+</pre>
+  
+<h5>which means that when the PARTS_ON_HAND column of a row in the INVENTORY table
+        is updated, fire the trigger. Note that when the triggering event is an UPDATE
+       statement, you can include a column list to identify which columns must be updated
+       to fire the trigger. Because INSERT and DELETE statements affect entire rows
+           of information, a column list cannot be specified for these options.
+   
+</h5>
+
+<br/>
+
+<h4>5. PACKAGES</h4>
+<h5>Packages provide a method of encapsulating related procedures, functions, and associated
+        cursors and variables together as a unit in the database. While packages allow the database administrator or application developer to organize
+        similar routines, they also offer increased functionality and database performance. For example, </h5>
+<pre>  CREATE PACKAGE bank_transactions  AS 
+        minimum_balance  CONSTANT NUMBER := 100.00; 
+        PROCEDURE apply_transactions; 
+        PROCEDURE enter_transaction (acct   NUMBER, 
+                      kind   CHAR, 
+                      amount NUMBER); 
+      END bank_transactions; 
+      
+      CREATE PACKAGE BODY bank_transactions AS  new_status  CHAR(20);
+      PROCEDURE do_journal_entry (acct NUMBER, 
+                      kind CHAR) IS
+      
+      BEGIN 
+          INSERT INTO journal 
+            VALUES (acct, kind, sysdate); 
+          IF kind = 'D' THEN 
+            new_status := 'Debit applied'; 
+          ELSIF kind = 'C' THEN 
+            new_status := 'Credit applied'; 
+          ELSE 
+            new_status := 'New account'; 
+          END IF; 
+        END do_journal_entry;
+      .
+      .
+      .
+      END bank_transactions;
+</pre>
+  
+<h5> the above two statements create the specification and body for a package that contains
+        several procedures that do the conditional checking if the journal is a kind of "C"
+        or D or Other it manipulates based on those specific conditions and functions that
+        process banking transactions. so stored packages also allow encapsulation.
+</h5>
+
+<br/>
+
+<h4>6. INDEX</h4>
+<h5>An index is a schema object that contains an entry for each value that appears in the
+        indexed column(s) of the table or cluster and provides direct, fast access to rows. 
+        Oracle Database supports several types of index:
+        
+        Normal indexes. (By default, Oracle Database creates B-tree indexes.)
+        Bitmap indexes, which store rowids associated with a key value as a bitmap
+        Partitioned indexes, which consist of partitions containing an entry for each
+                     value that appears in the indexed column(s) of the table
+        
+        Function-based indexes, which are based on expressions. They enable you to construct
+                        queries that evaluate the value returned by an expression, which
+                    in turn may include built-in or user-defined functions.
+        
+        Domain indexes, which are instances of an application-specific index of type indextype </h5>
+
+<pre>   "CREATE INDEX ord_customer_ix ON orders (customer_id);"
+</pre>
+  
+<h5>The above statement creates an index on the customer_id column of the sample table
+        orders:
+        in the preceding statement, the customer_id column is the index key. The index itself
+        is named ord_customer_ix.
+</h5>
+
+
+
+<br/>
+
+<h4>7. CURSOR</h4>
+<h5>A cursor is a pointer, which points towards a pre allocated memory location in the SGA.
+        For transparent understanding, it is a handle or gateway adopted by Oracle to execute a
+        SQL query. The memory location to which it points is known as Context area.
+        Oracle associates every SELECT statement with a cursor to hold the query information in
+        this context area.
+        
+        There are two types of cursors: Implicit cursors and explicit cursors.
+        
+        Implicit Cursors
+        Oracle server processes every SQL statement in a PL/SQL block as an implicit cursor.
+        All the DML statements (INSERT, UPDATE or DELETE) and SELECT query with INTO or BULK 
+        COLLECT clauses are candidates for implicit cursors.
+        
+        Explicit Cursor
+        These cursors are explicitly declared in the DECLARE section of the block. They possess
+        a specific name and a static SELECT statement attached to them. Explicit cursors are
+        manually executed by the developers and follow complete execution cycle.
+        
+        
+        example: </h5>
+
+<pre>   DECLARE
+        CURSOR C_EMP IS
+        SELECT EMPLOYEE_NAME, JOB_ID, SALARY
+        FROM EMPLOYEES
+        WHERE EMPLOYEE_ID=100;
+        L_ENAME VARCHAR2(100);
+        L_JOBID VARCHAR2(10);
+        L_SALARY NUMBER;
+        BEGIN
+        OPEN C_EMP;
+        FETCH C_EMP INTO L_ENAME, L_JOBID, L_SALARY;
+        DBMS_OUTPUT.PUT_LINE(‘Employee ‘||L_ENAME||’ with Job function of
+        ‘||L_JOBID||’ draws ‘||TO_CHAR(L_SALARY)||’ per month’);
+        CLOSE C_EMP;
+</pre>
+  
+<h5> in the above code declares a cursor, which select employee name, job id and salary for 
+        the employees with employee id 100. Note the opening, fetching and closing of the 
+        cursor. Here cursor returns a single record.
+</h5>
+
+<br/>
+
+<h4>8. VIEW</h4>
+<h5>Views are virtual tables formed by a query. A view is a dictionary 
+        object that you can use until you drop it. Views are not updatable.
+        which is a logical table based on one or more tables or views. A view contains no data
+        itself. The tables upon which a view is based are called base tables.
+         </h5>
+<pre>  CREATE VIEW SAMP.V1 (COL_SUM, COL_DIFF)
+        AS SELECT COMM + BONUS, COMM - BONUS
+        FROM SAMP.EMPLOYEE;
+</pre>
+  
+<h5>creates a view for the inherited columns COL_SUM and COL_DIFF
+        then selects the sum and diffrence of bonus form the employee.
+        
+</h5>
+
+
+<br/>
+
+<h4>9. RECORD</h4>
+<h5>A record is a composite datatype. which means that it can hold more than one piece of 
+        information. as compared to a scalar datatype such as number or string. </h5>
+<pre>   CREATE PROCEDUER process_employee(
+        employee_id_in IN
+        omag_employees.employee_id%TYPE
+    )
+    IS
+    l_employee  omag_employees%ROWTYPE;
+    BEGIN
+        SELECT employee_id,
+               lastname,
+               salary
+        INTO l_employee
+        FROM omag_employee
+        WHERE employee_id = employee_id_in;
+    END;
+    
+</pre>
+  
+<h5> when the above procedure is compiled, SQL/PL looks up the structure of the omag_employees
+        table and defines a record that has a field for each column in the table, with the same name
+        and datatype. By using %ROWTYPE to declare the record, 
+</h5>
+
+
+<br/>
+
+<h4>10. SEQUENCE</h4>
+<h5>Sequences are special database objects that provide numbers in sequence for input to
+        a table. They are useful for providing generated primary key values and for input of 
+        number type columns such as purchase order, employee number, sample number, and sales 
+        order number, where the input must be unique and in some form of numerical sequence.
+        
+        The owner of the schema where the sequence generator lives automatically gains the USAGE
+        privilege on the sequence generator, and can grant this privilege to other users and 
+        roles. Only the database owner and the owner of the sequence generator can grant these 
+        USAGE privileges. The USAGE privilege cannot be revoked from the schema owner.</h5>
+<pre>  CREATE SEQUENCE order_entry_id
+        AS BIGINT
+        START WITH 3000000000;
+</pre>
+  
+<h5>The above statement creates a sequence of type BIGINT with a start value of 3,000,000,000
+        .The value increases by 1, and the last legal value is the largest possible BIGINT. 
+        If NEXT VALUE FOR is invoked on the generator again, Derby throws an exception.
+        
+</h5>
+
+<br/>
+
+<h4>11. FUNCTION</h4>
+<h5>A stored function is a special kind stored program that returns a single value. You use stored functions to encapsulate common formulas or business rules that are reusable among SQL statements or stored programs.</h5>
+<pre>  DELIMITER $$
+                                
+        CREATE FUNCTION CustomerLevel(p_creditLimit double) RETURNS VARCHAR(10)
+            DETERMINISTIC
+        BEGIN
+            DECLARE lvl varchar(10);
+            
+            IF p_creditLimit > 50000 THEN
+            SET lvl = 'PLATINUM';
+            ELSEIF (p_creditLimit <= 50000 AND p_creditLimit >= 10000) THEN
+                SET lvl = 'GOLD';
+            ELSEIF p_creditLimit < 10000 THEN
+                SET lvl = 'SILVER';
+            END IF;
+            
+            RETURN (lvl);
+        END
+        
+Now we can use:
+            
+        SELECT 
+            customerName, 
+            CustomerLevel(creditLimit)
+        FROM
+            customers
+        ORDER BY 
+            customerName;
+</pre>
+  
+<h5>The above function will determine customer level depending on their credit limit
+        
+</h5>
+
+<br/>
+
+<h4>12. CONSTRAINT</h4>
+<h5>Constraints are the rules enforced on the data columns of a table. These are used to limit the type of data that can go into a table. This ensures the accuracy and reliability of the data in the database. Constraints could be either on a column level or a table level. The column level constraints are applied only to one column, whereas the table level constraints are applied to the whole table.</h5>
+<pre>  CREATE TABLE IF NOT EXISTS
+        newauthor(aut_id varchar(8) NOT NULL , 
+        aut_name varchar(50) NOT NULL,
+        country varchar(25) NOT NULL CHECK (country IN ('USA','UK','India')), 
+        home_city varchar(25) NOT NULL, 
+        PRIMARY KEY (aut_id,home_city));
+</pre>
+  
+<h5>In the above table auth_id cant be left open for any given row and auth_id and home_city cant be Similar for two rows. country value can be USA or UK or India.
+        
+</h5>
+
+
+
+<br/>
+
+<h4>13. DATABASELINK</h4>
+<h5>In oracle database, a database link is a schema object in one database that enables you to access objects on another database. The other database need not be an Oracle Database system. However, to access non-Oracle systems you must use Oracle Heterogeneous Services.</h5>
+<pre>  CREATE DATABASE LINK remote.us.oracle.com
+        CONNECT TO CURRENT_USER
+        USING 'remote';
+</pre>
+  
+<h5>
+    in the above example the Link gives or enables access to the remote.us.oracle.com database 
+</h5>
+
+
+
+  </body>
+</html>
